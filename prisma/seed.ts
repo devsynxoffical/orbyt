@@ -63,6 +63,19 @@ async function main() {
 
   const tools = await Promise.all([
     prisma.tool.upsert({
+      where: { slug: "ahrefs" },
+      update: { launchUrl: "https://ahrefs.com" },
+      create: {
+        name: "Ahrefs",
+        slug: "ahrefs",
+        description: "SEO toolset for backlink analysis, site audit, and keyword explorer.",
+        pricePkr: 3500,
+        accessDurationDays: 30,
+        launchUrl: "https://ahrefs.com",
+        active: true,
+      },
+    }),
+    prisma.tool.upsert({
       where: { slug: "semrush" },
       update: { launchUrl: "https://www.semrush.com" },
       create: {
