@@ -1,4 +1,4 @@
-const CLAIM_FALLBACK = "https://rankmora.io/api/tools/extension/claim";
+const CLAIM_FALLBACK = "https://tools.orbytrush.com/api/tools/extension/claim";
 
 // Prevent tabs from navigating to settings, account, or logout endpoints to protect shared accounts
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {

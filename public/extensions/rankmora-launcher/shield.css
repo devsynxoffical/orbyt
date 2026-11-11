@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Rankmora Tool Launcher - Account & Personal Information Shield
+   Orbyt Rush Tool Launcher - Account & Personal Information Shield
    Protects personal identity (emails, usernames, avatars, billing details,
    phone numbers, addresses) and completely locks settings, profile editing,
    and logout across all shared tools.
@@ -48,7 +48,7 @@ body:has(a[href*="/settings/accessibility"]) > * {
 
 body:has(a[href*="/settings/your-account"])::after,
 body:has(a[href*="/settings/login-and-security"])::after {
-  content: "🛡️ Account settings and personal details are locked by Rankmora. Redirecting to workspace...";
+  content: "Account settings and personal details are protected by Orbyt Rush. Redirecting to workspace...";
   display: block !important;
   color: #10b981 !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;

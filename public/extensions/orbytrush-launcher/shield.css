@@ -1,0 +1,326 @@
+/* ==========================================================================
+   Orbyt Rush Tool Launcher - Account & Personal Information Shield
+   Protects personal identity (emails, usernames, avatars, billing details,
+   phone numbers, addresses) and completely locks settings, profile editing,
+   and logout across all shared tools.
+   ========================================================================== */
+
+/* Universal hidden elements */
+[data-rankmora-hidden="true"],
+.rankmora-shield-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ==========================================================================
+   1. Universal Settings Page Blackout
+   If any tool opens a settings/profile page, CSS immediately blacks it out
+   before JavaScript even executes, so NO personal info can flash on screen.
+   ========================================================================== */
+
+/* Canva settings page blackout */
+body:has(a[href*="/settings/your-account"]),
+body:has(a[href*="/settings/login-and-security"]),
+body:has(a[href*="/settings/billing"]),
+body:has(a[href*="/settings/accessibility"]) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #0f172a !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body:has(a[href*="/settings/your-account"]) > *,
+body:has(a[href*="/settings/login-and-security"]) > *,
+body:has(a[href*="/settings/billing"]) > *,
+body:has(a[href*="/settings/accessibility"]) > * {
+  display: none !important;
+}
+
+body:has(a[href*="/settings/your-account"])::after,
+body:has(a[href*="/settings/login-and-security"])::after {
+  content: "Account settings and personal details are protected by Orbyt Rush. Redirecting to workspace...";
+  display: block !important;
+  color: #10b981 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  padding: 30px !important;
+}
+
+/* ==========================================================================
+   2. Universal Settings, Account, and Billing Links Hiding
+   ========================================================================== */
+
+a[href*="/settings"],
+a[href*="/account"],
+a[href*="/your-account"],
+a[href*="/login-and-security"],
+a[href*="/billing"],
+a[href*="/invoices"],
+a[href*="/subscription"],
+a[href*="/payment-methods"],
+a[href*="/account/billing"],
+button[aria-label*="settings" i],
+button[aria-label*="account settings" i],
+button[data-testid*="settings"],
+[role="menuitem"]:has(a[href*="settings"]),
+[role="menuitem"]:has(svg.lucide-settings) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Blur any input fields containing email or sensitive credentials */
+input[type="email"],
+input[name*="email"],
+input[id*="email"],
+input[autocomplete="email"],
+input[name*="card"],
+input[name*="phone"],
+input[name*="billing"] {
+  filter: blur(8px) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* ==========================================================================
+   3. Canva (canva.com) Shielding
+   ========================================================================== */
+
+/* Hide Account settings, Sign out, and Billing items in Canva */
+a[href*="/settings/your-account"],
+a[href*="/settings/login-and-security"],
+a[href*="/settings/billing"],
+a[href*="/settings/teams"],
+a[href*="/logout"],
+button[aria-label*="Settings" i],
+button[aria-label*="Account settings" i],
+button[aria-label*="Sign out" i],
+button[aria-label*="Log out" i],
+button[aria-label*="Disconnect" i],
+button[aria-label*="Change photo" i],
+button[aria-label*="Remove photo" i],
+[role="menuitem"]:has(a[href*="/settings"]) {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+[data-rankmora-hidden="true"] {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ==========================================================================
+   4. ChatGPT (chatgpt.com, openai.com) Shielding
+   ========================================================================== */
+
+/* Hide logout button in dropdown menu & popovers */
+[role="menuitem"]:has(svg.lucide-log-out),
+[role="menuitem"]:has(path[d*="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"]),
+button[data-testid="logout-button"],
+a[href*="/api/auth/signout"],
+a[href*="/auth/logout"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Hide sidebar Settings button */
+nav a[href*="settings"],
+nav button:has(svg.lucide-settings),
+[role="menuitem"]:has(svg.lucide-settings) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* In ChatGPT settings dialog: hide Security, Data Controls, Billing tabs */
+[role="dialog"] [role="tablist"] [role="tab"]:has(svg.lucide-shield-alert),
+[role="dialog"] [role="tablist"] [role="tab"]:has(svg.lucide-key),
+[role="dialog"] [role="tablist"] [role="tab"]:has(svg.lucide-lock),
+[role="dialog"] [role="tablist"] [role="tab"]:has(svg.lucide-credit-card) {
+  display: none !important;
+}
+
+/* Hide delete account, export data, and log out all devices buttons */
+button:has-text("Delete account"),
+button:has-text("Log out of all devices"),
+button:has-text("Export data") {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Hide 'Upgrade plan' and 'My plan' menu options */
+[role="menuitem"]:has(svg.lucide-sparkles),
+[role="menuitem"]:has(svg.lucide-zap) {
+  display: none !important;
+}
+
+/* ==========================================================================
+   5. Claude (claude.ai) Shielding
+   ========================================================================== */
+
+/* Hide sign out / log out menu item */
+[role="menu"] [role="menuitem"]:has(svg.lucide-log-out),
+[role="menu"] a[href*="logout"],
+button[data-testid="user-menu-sign-out"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Hide Claude billing and settings menu items */
+[role="menu"] [role="menuitem"]:has(svg.lucide-credit-card),
+[role="menu"] [role="menuitem"]:has(svg.lucide-settings),
+[role="menu"] a[href*="/settings"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
+   6. Grammarly & QuillBot Shielding
+   ========================================================================== */
+
+a[href*="/logout"],
+a[href*="/signin"],
+[data-name*="logout"],
+[data-qa*="logout"],
+[data-name*="security"],
+[data-qa*="security"],
+[data-name*="subscription"],
+[data-qa*="subscription"],
+[data-testid*="logout"],
+[data-testid*="account-details"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
+   7. Rankmora Shield Notification Toast
+   ========================================================================== */
+
+#rankmora-shield-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 400px;
+  padding: 14px 20px;
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  animation: rankmoraSlideIn 0.25s ease-out forwards;
+  pointer-events: auto;
+}
+
+#rankmora-shield-toast.rankmora-fade-out {
+  animation: rankmoraSlideOut 0.25s ease-in forwards;
+}
+
+#rankmora-shield-toast .rankmora-toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+#rankmora-shield-toast .rankmora-toast-body strong {
+  display: block;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #f8fafc;
+  margin-bottom: 2px;
+}
+
+#rankmora-shield-toast .rankmora-toast-body p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+@keyframes rankmoraSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rankmoraSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+}
+
+/* ==========================================================================
+   8. Subtle Rankmora Session Pill (Bottom Left Indicator)
+   ========================================================================== */
+
+#rankmora-session-badge {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2147483640;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 9999px;
+  color: #cbd5e1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  user-select: none;
+  pointer-events: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease;
+  opacity: 0.8;
+}
+
+#rankmora-session-badge .rankmora-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}

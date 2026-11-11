@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Orbyt Rush Tool Launcher",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Opens Orbyt Rush tools on their real domain with your authorized session.",
   "permissions": ["cookies", "tabs", "storage", "declarativeNetRequest"],
   "host_permissions": [
+    "https://*.orbytrush.com/*",
+    "https://orbytrush.com/*",
+    "https://tools.orbytrush.com/*",
+    "https://admin.orbytrush.com/*",
+    "https://*.up.railway.app/*",
     "https://*.canva.com/*",
     "https://canva.com/*",
     "https://*.chatgpt.com/*",
@@ -42,7 +47,8 @@
     "https://*.placeit.net/*",
     "https://rankmora.io/*",
     "https://*.rankmora.io/*",
-    "http://localhost:3000/*",
+    "http://localhost:*/*",
+    "http://127.0.0.1:*/*",
     "https://*/*"
   ],
   "background": {
@@ -60,9 +66,14 @@
   "content_scripts": [
     {
       "matches": [
+        "https://*.orbytrush.com/*",
+        "https://orbytrush.com/*",
+        "https://tools.orbytrush.com/*",
+        "https://*.up.railway.app/*",
+        "http://localhost:*/*",
+        "http://127.0.0.1:*/*",
         "https://rankmora.io/*",
-        "https://*.rankmora.io/*",
-        "http://localhost:3000/*"
+        "https://*.rankmora.io/*"
       ],
       "js": ["content.js"],
       "run_at": "document_start"
@@ -112,7 +123,7 @@
     }
   ],
   "action": {
-    "default_title": "Rankmora Tool Launcher",
+    "default_title": "Orbyt Rush Tool Launcher",
     "default_popup": "popup.html"
   }
 }

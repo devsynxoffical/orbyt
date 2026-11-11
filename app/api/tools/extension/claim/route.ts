@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   if (!version || compareSemver(version, MIN_EXTENSION_VERSION) < 0) {
     return NextResponse.json(
       {
-        error: `Your Rankmora Tool Launcher extension (${version || "outdated"}) must be updated to version ${MIN_EXTENSION_VERSION} to launch tools securely.`,
+        error: `Your Orbyt Rush Tool Launcher extension (${version || "outdated"}) must be updated to version ${MIN_EXTENSION_VERSION} to launch tools securely.`,
         code: "EXTENSION_UPDATE_REQUIRED",
         requiredVersion: MIN_EXTENSION_VERSION,
         installedVersion: version || "unknown",

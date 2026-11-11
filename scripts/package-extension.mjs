@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Copies apps/tool-launcher-extension → public/extensions/rankmora-launcher
- * and creates public/extensions/rankmora-launcher.zip for user download.
- * Uses archiver (Node-only) so VPS builds do not require the `zip` CLI.
+ * Copies apps/tool-launcher-extension → public/extensions/orbytrush-launcher
+ * and creates public/extensions/orbytrush-launcher.zip for user download.
+ * Uses archiver (Node-only) so builds do not require the `zip` CLI.
  */
 import { cpSync, createWriteStream, mkdirSync, rmSync } from "fs";
 import path from "path";
@@ -11,8 +11,10 @@ import archiver from "archiver";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const src = path.join(root, "apps/tool-launcher-extension");
-const destDir = path.join(root, "public/extensions/rankmora-launcher");
-const zipPath = path.join(root, "public/extensions/rankmora-launcher.zip");
+const destDir = path.join(root, "public/extensions/orbytrush-launcher");
+const zipPath = path.join(root, "public/extensions/orbytrush-launcher.zip");
+const legacyDestDir = path.join(root, "public/extensions/rankmora-launcher");
+const legacyZipPath = path.join(root, "public/extensions/rankmora-launcher.zip");
 
 const include = [
   "manifest.json",
@@ -24,27 +26,32 @@ const include = [
   "popup.html",
 ];
 
-mkdirSync(path.dirname(destDir), { recursive: true });
-rmSync(destDir, { recursive: true, force: true });
-mkdirSync(destDir, { recursive: true });
+async function packageZip(targetDir, targetZip, folderName) {
+  mkdirSync(path.dirname(targetDir), { recursive: true });
+  rmSync(targetDir, { recursive: true, force: true });
+  mkdirSync(targetDir, { recursive: true });
 
-for (const file of include) {
-  cpSync(path.join(src, file), path.join(destDir, file));
+  for (const file of include) {
+    cpSync(path.join(src, file), path.join(targetDir, file));
+  }
+
+  rmSync(targetZip, { force: true });
+
+  await new Promise((resolve, reject) => {
+    const output = createWriteStream(targetZip);
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    output.on("close", resolve);
+    output.on("error", reject);
+    archive.on("error", reject);
+
+    archive.pipe(output);
+    archive.directory(targetDir, folderName);
+    archive.finalize();
+  });
 }
 
-rmSync(zipPath, { force: true });
-
-await new Promise((resolve, reject) => {
-  const output = createWriteStream(zipPath);
-  const archive = archiver("zip", { zlib: { level: 9 } });
-
-  output.on("close", resolve);
-  output.on("error", reject);
-  archive.on("error", reject);
-
-  archive.pipe(output);
-  archive.directory(destDir, "rankmora-launcher");
-  archive.finalize();
-});
+await packageZip(destDir, zipPath, "orbytrush-launcher");
+await packageZip(legacyDestDir, legacyZipPath, "rankmora-launcher");
 
 console.log(`Extension packaged: ${zipPath}`);

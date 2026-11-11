@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 /**
- * Authenticated download of the Rankmora Tool Launcher (Chrome extension ZIP).
+ * Authenticated download of the Orbyt Rush Tool Launcher (Chrome extension ZIP).
  */
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -15,22 +15,30 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const zipPath = path.join(
+  const primaryZip = path.join(
+    process.cwd(),
+    "public/extensions/orbytrush-launcher.zip"
+  );
+  const fallbackZip = path.join(
     process.cwd(),
     "public/extensions/rankmora-launcher.zip"
   );
 
   let buffer: Buffer;
   try {
-    buffer = await readFile(zipPath);
+    buffer = await readFile(primaryZip);
   } catch {
-    return NextResponse.json(
-      {
-        error:
-          "Extension package is not built yet. Admin should run npm run extension:pack on the server.",
-      },
-      { status: 503 }
-    );
+    try {
+      buffer = await readFile(fallbackZip);
+    } catch {
+      return NextResponse.json(
+        {
+          error:
+            "Extension package is not built yet. Admin should run npm run extension:pack on the server.",
+        },
+        { status: 503 }
+      );
+    }
   }
 
   return new NextResponse(new Uint8Array(buffer), {
@@ -38,7 +46,7 @@ export async function GET() {
     headers: {
       "Content-Type": "application/zip",
       "Content-Disposition":
-        'attachment; filename="rankmora-tool-launcher.zip"',
+        'attachment; filename="orbytrush-tool-launcher.zip"',
       "Cache-Control": "private, no-cache",
     },
   });

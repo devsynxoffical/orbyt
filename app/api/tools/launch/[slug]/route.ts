@@ -158,7 +158,7 @@ export async function GET(request: Request, { params }: RouteParams) {
       openUrl: tool.launchUrl,
       expiresAt: claim.expiresAt.toISOString(),
       installHint:
-        "Install the Rankmora Tool Launcher Chrome extension on desktop, then click Launch again.",
+        "Install the Orbyt Rush Tool Launcher Chrome extension on desktop, then click Launch again.",
     });
   }
 
