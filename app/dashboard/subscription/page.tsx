@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getActivePlans } from "@/lib/data/plans";
@@ -13,7 +14,10 @@ type Props = {
 
 export default async function SubscriptionPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
-  const userId = session!.user.id;
+  if (!session?.user?.id) {
+    redirect("/login?callbackUrl=/dashboard/subscription");
+  }
+  const userId = session.user.id;
 
   if (searchParams.session_id) {
     await verifyStripeCheckoutSession(searchParams.session_id, userId);

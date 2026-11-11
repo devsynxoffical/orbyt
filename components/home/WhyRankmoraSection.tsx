@@ -24,7 +24,7 @@ const reasons = [
     icon: "dashboard",
     title: "One dashboard",
     description:
-      "Browse, purchase, and launch your tools from a single Rankmora workspace.",
+      "Browse, purchase, and launch your tools from a single Orbyt Rush workspace.",
   },
 ];
 
@@ -33,9 +33,9 @@ export function WhyRankmoraSection() {
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-10">
         <SectionHeader
-          eyebrow="Why Rankmora"
+          eyebrow="Why Orbyt Rush"
           title="Affordable SEO tools for professionals"
-          description="Professional SEO software gets expensive when you need several platforms. Rankmora lets you choose the tools and durations that match each project."
+          description="Professional SEO software gets expensive when you need several platforms. Orbyt Rush lets you choose the tools and durations that match each project."
         />
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

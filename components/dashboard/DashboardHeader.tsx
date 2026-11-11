@@ -76,15 +76,6 @@ export function DashboardHeader({
             )
           )}
           <Link
-            href="/"
-            target="_blank"
-            className="hidden items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold text-collab-dark/70 transition hover:bg-white hover:text-collab-dark sm:inline-flex"
-            title="Open marketing website in a new tab"
-          >
-            Website
-            <MaterialIcon name="open_in_new" className="text-sm opacity-60" />
-          </Link>
-          <Link
             href={homeHref}
             className="hidden rounded-lg px-3 py-2 text-sm font-bold text-collab-dark/70 transition-colors hover:bg-collab-yellow/50 hover:text-collab-dark sm:inline-flex"
           >

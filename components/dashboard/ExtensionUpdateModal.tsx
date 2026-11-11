@@ -120,7 +120,7 @@ export function ExtensionUpdateModal({
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
           <a
             href="/api/tools/extension/download"
-            download="rankmora-tool-launcher.zip"
+            download="orbytrush-tool-launcher.zip"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-collab-dark px-5 py-2.5 text-sm font-bold text-white hover:bg-neutral-800"
           >
             <MaterialIcon name="download" />

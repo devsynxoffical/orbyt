@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPlatformSettings } from "@/lib/data/platform-settings";
@@ -9,7 +10,10 @@ import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 export default async function DashboardSupportPage() {
   const userSession = await getServerSession(authOptions);
-  const userId = userSession!.user.id;
+  if (!userSession?.user?.id) {
+    redirect("/login?callbackUrl=/dashboard/support");
+  }
+  const userId = userSession.user.id;
 
   const [thread, settings] = await Promise.all([
     getUserSupportThread(userId),

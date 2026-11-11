@@ -41,7 +41,7 @@ export function WhoItsForSection() {
         <SectionHeader
           eyebrow="Who it's for"
           title="Built for SEO professionals"
-          description="Rankmora is designed for freelancers, agencies, marketers, website owners, and businesses that need professional SEO resources without unnecessary software expenses."
+          description="Orbyt Rush is designed for freelancers, agencies, marketers, website owners, and businesses that need professional SEO resources without unnecessary software expenses."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

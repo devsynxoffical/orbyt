@@ -19,7 +19,7 @@ export function authSessionUpdateAgeSec(): number {
 
 /** Strict IP binding for normal users (admins exempt unless AUTH_STRICT_IP_ADMIN=true). */
 export function authStrictIpEnabled(): boolean {
-  const v = (process.env.AUTH_STRICT_IP ?? "true").toLowerCase();
+  const v = (process.env.AUTH_STRICT_IP ?? "false").toLowerCase();
   return v === "true" || v === "1" || v === "yes";
 }
 

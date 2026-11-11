@@ -28,7 +28,7 @@ export async function DashboardShell({
   }
 
   if (variant === "admin" && session.user.role !== "ADMIN") {
-    redirect(`${getAppBaseUrl()}/dashboard`);
+    redirect("/dashboard");
   }
 
   const navSections =

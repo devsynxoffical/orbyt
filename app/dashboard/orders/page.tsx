@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPaymentOrdersByUser } from "@/lib/data/payment-orders";
@@ -30,8 +31,11 @@ type Props = {
 
 export default async function OrdersPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    redirect("/login?callbackUrl=/dashboard/orders");
+  }
 
-  if (searchParams.session_id && session?.user?.id) {
+  if (searchParams.session_id) {
     const { verifyStripeCheckoutSession } = await import(
       "@/lib/payments/verify-stripe-checkout"
     );
@@ -39,7 +43,7 @@ export default async function OrdersPage({ searchParams }: Props) {
   }
 
   const [orders, settings] = await Promise.all([
-    getPaymentOrdersByUser(session!.user.id),
+    getPaymentOrdersByUser(session.user.id),
     getPlatformSettings(),
   ]);
 

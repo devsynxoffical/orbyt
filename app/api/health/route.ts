@@ -12,12 +12,12 @@ export async function GET() {
 
     return NextResponse.json({
       ok: true,
-      service: "groupbuy-web",
+      service: "orbytrush-web",
       mockMode: isMockMode(),
     });
   } catch {
     return NextResponse.json(
-      { ok: false, service: "groupbuy-web" },
+      { ok: false, service: "orbytrush-web" },
       { status: 503 }
     );
   }
