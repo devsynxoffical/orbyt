@@ -5,11 +5,11 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      description="How GroupBuy Tools collects, uses, and protects your personal information when you use our platform."
+      description="How Orbyt Rush collects, uses, and protects your personal information when you use our platform."
     >
       <LegalSection title="Overview" index={0}>
         <p>
-          GroupBuy Tools respects your privacy. This policy describes what data
+          Orbyt Rush respects your privacy. This policy describes what data
           we collect, why we collect it, and the choices you have regarding your
           information.
         </p>

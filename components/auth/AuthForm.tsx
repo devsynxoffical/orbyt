@@ -140,11 +140,13 @@ export function AuthForm({ mode }: AuthFormProps) {
       // Hard navigation avoids stuck "Loading..." when soft RSC navigation fails.
       const dest = callbackUrl?.startsWith("/") ? callbackUrl : "/dashboard";
       window.location.assign(dest);
-    } catch {
+    } catch (err: unknown) {
       setIsRedirecting(false);
-      setServerError(
-        "Sign-in failed (network or server error). Check that the database is reachable, then try again."
-      );
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : "Sign-in failed due to a temporary network issue. Please check your connection and try again.";
+      setServerError(message);
     }
   };
 

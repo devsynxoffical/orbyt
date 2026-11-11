@@ -38,7 +38,7 @@ export async function sendPasswordResetEmail(options: {
   name: string;
   resetUrl: string;
 }): Promise<void> {
-  const brand = process.env.EMAIL_FROM_NAME?.trim() || "GroupBuy Tools";
+  const brand = process.env.EMAIL_FROM_NAME?.trim() || "Orbyt Rush";
   const from = process.env.EMAIL_FROM!.trim();
   const transporter = getTransporter();
 

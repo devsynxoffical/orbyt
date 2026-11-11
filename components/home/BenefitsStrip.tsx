@@ -33,7 +33,7 @@ export function BenefitsStrip() {
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-10">
         <SectionHeader
-          eyebrow="Why GroupBuy"
+          eyebrow="Why Orbyt Rush"
           title="A team with high technical skills helps you access premium tools"
           description="We handle the infrastructure so you can focus on SEO results."
         />

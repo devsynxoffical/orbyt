@@ -56,7 +56,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About us"
         title="Making premium SEO tools accessible to all"
-        description="GroupBuy Tools helps freelancers, agencies, and growth teams access the full SEO stack through simple, affordable per-tool pricing."
+        description="Orbyt Rush helps freelancers, agencies, and growth teams access the full SEO stack through simple, affordable per-tool pricing."
       >
         <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
           {highlights.map((item) => (
@@ -200,7 +200,7 @@ export default function AboutPage() {
             </h2>
             <p className="mt-3 text-sm text-neutral-600 sm:text-base">
               Start your free trial today and see why thousands of SEO professionals
-              trust GroupBuy Tools.
+              trust Orbyt Rush.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/signup" className="btn-marketing min-w-[140px]">

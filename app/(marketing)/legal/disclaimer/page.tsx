@@ -5,11 +5,11 @@ export default function DisclaimerPage() {
   return (
     <LegalPage
       title="Disclaimer"
-      description="Important information about GroupBuy Tools, third-party software, and limitations of our service."
+      description="Important information about Orbyt Rush, third-party software, and limitations of our service."
     >
       <LegalSection title="Third-party affiliation" index={0}>
         <p>
-          GroupBuy Tools is an independent platform that provides access to
+          Orbyt Rush is an independent platform that provides access to
           third-party SEO software. We are not affiliated with, endorsed by, or
           sponsored by Ahrefs, Semrush, Moz, or any other tool vendor unless
           explicitly stated.

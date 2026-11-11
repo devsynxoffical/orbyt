@@ -5,11 +5,11 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Terms of Service"
-      description="These terms govern your use of GroupBuy Tools. By creating an account or subscribing, you agree to the rules below."
+      description="These terms govern your use of Orbyt Rush. By creating an account or subscribing, you agree to the rules below."
     >
       <LegalSection title="Overview" index={0}>
         <p>
-          These Terms of Service govern your use of the GroupBuy Tools platform.
+          These Terms of Service govern your use of the Orbyt Rush platform.
           By creating an account or subscribing to a plan, you agree to these
           terms in full.
         </p>
@@ -17,7 +17,7 @@ export default function TermsPage() {
 
       <LegalSection title="Service description" index={1}>
         <p>
-          GroupBuy Tools provides access to third-party SEO software through
+          Orbyt Rush provides access to third-party SEO software through
           shared group licenses. Access is granted for the duration of an active
           subscription and may vary by plan tier.
         </p>

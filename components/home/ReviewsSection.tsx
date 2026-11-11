@@ -12,7 +12,7 @@ const reviews = [
     name: "Marcus T.",
     role: "SEO Freelancer",
     initials: "MT",
-    text: "I was paying for three separate subscriptions. GroupBuy Tools replaced all of them for less than the price of one Ahrefs plan.",
+    text: "I was paying for three separate subscriptions. Orbyt Rush replaced all of them for less than the price of one Ahrefs plan.",
   },
   {
     name: "Priya N.",
@@ -36,7 +36,7 @@ const reviews = [
     name: "David L.",
     role: "E-commerce SEO",
     initials: "DL",
-    text: "Reliable uptime and fast access. We run client campaigns daily and GroupBuy Tools has been rock solid for months.",
+    text: "Reliable uptime and fast access. We run client campaigns daily and Orbyt Rush has been rock solid for months.",
   },
 ];
 
@@ -88,7 +88,7 @@ export function ReviewsSection() {
             Loved by SEO professionals
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-sm text-neutral-600 sm:text-base">
-            Real feedback from freelancers and agencies using GroupBuy Tools every
+            Real feedback from freelancers and agencies using Orbyt Rush every
             day.
           </p>
         </AnimateIn>

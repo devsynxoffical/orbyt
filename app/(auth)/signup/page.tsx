@@ -20,7 +20,7 @@ const AuthForm = dynamic(() => import("@/components/auth/AuthFormClient"), {
 export default function SignupPage() {
   return (
     <AuthLayout
-      title="Join GroupBuy Tools"
+      title="Join Orbyt Rush"
       subtitle="Create your account to browse tools and get access granted by your administrator."
     >
       {isMockMode() && (
