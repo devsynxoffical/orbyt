@@ -24,6 +24,7 @@ const include = [
   "shield.css",
   "rules.json",
   "popup.html",
+  "icons",
 ];
 
 async function packageZip(targetDir, targetZip, folderName) {
@@ -32,7 +33,7 @@ async function packageZip(targetDir, targetZip, folderName) {
   mkdirSync(targetDir, { recursive: true });
 
   for (const file of include) {
-    cpSync(path.join(src, file), path.join(targetDir, file));
+    cpSync(path.join(src, file), path.join(targetDir, file), { recursive: true });
   }
 
   rmSync(targetZip, { force: true });
