@@ -78,9 +78,9 @@ export function AdminAuthForm() {
     }
 
     const sessionRes = await fetch("/api/auth/session");
-    const sessionData = await sessionRes.json();
+    const sessionData = await sessionRes.json().catch(() => null);
 
-    if (sessionData?.user?.role !== "ADMIN") {
+    if (sessionData?.user && sessionData.user.role !== "ADMIN") {
       await signOut({ redirect: false });
       setServerError(
         "This portal is for administrators only. Please use the main site to sign in."

@@ -32,17 +32,9 @@ export function authCookieDomain(): string | undefined {
   if (process.env.NODE_ENV !== "production") return undefined;
   const fromEnv = process.env.NEXTAUTH_COOKIE_DOMAIN?.trim();
   if (fromEnv) return fromEnv;
-  try {
-    const base = process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL;
-    if (!base) return undefined;
-    const host = new URL(base).hostname;
-    const parts = host.split(".").filter(Boolean);
-    if (parts.length >= 2) {
-      return `.${parts.slice(-2).join(".")}`;
-    }
-  } catch {
-    /* ignore */
-  }
+  // Do NOT guess cookie domain from NEXTAUTH_URL: when browsing via railway.app
+  // or alternative preview domains, a hardcoded domain causes browsers to reject cookies.
+  // Leaving undefined allows cookies to be host-only and work on all domains.
   return undefined;
 }
 
