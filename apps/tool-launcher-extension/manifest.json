@@ -1,0 +1,118 @@
+{
+  "manifest_version": 3,
+  "name": "Orbyt Rush Tool Launcher",
+  "version": "1.4.2",
+  "description": "Opens Orbyt Rush tools on their real domain with your authorized session.",
+  "permissions": ["cookies", "tabs", "storage", "declarativeNetRequest"],
+  "host_permissions": [
+    "https://*.canva.com/*",
+    "https://canva.com/*",
+    "https://*.chatgpt.com/*",
+    "https://chatgpt.com/*",
+    "https://*.openai.com/*",
+    "https://openai.com/*",
+    "https://*.claude.ai/*",
+    "https://claude.ai/*",
+    "https://*.anthropic.com/*",
+    "https://anthropic.com/*",
+    "https://*.grammarly.com/*",
+    "https://grammarly.com/*",
+    "https://*.grammarly.io/*",
+    "https://*.quillbot.com/*",
+    "https://quillbot.com/*",
+    "https://*.semrush.com/*",
+    "https://*.ahrefs.com/*",
+    "https://*.moz.com/*",
+    "https://*.majestic.com/*",
+    "https://*.spyfu.com/*",
+    "https://*.keywordseverywhere.com/*",
+    "https://*.kwfinder.com/*",
+    "https://*.mangools.com/*",
+    "https://*.wordai.com/*",
+    "https://*.wordhero.co/*",
+    "https://*.rytr.me/*",
+    "https://*.quetext.com/*",
+    "https://*.spinrewriter.com/*",
+    "https://*.spamzilla.io/*",
+    "https://*.woorank.com/*",
+    "https://*.writerzen.net/*",
+    "https://*.scribd.com/*",
+    "https://*.slideshare.net/*",
+    "https://*.picmonkey.com/*",
+    "https://*.placeit.net/*",
+    "https://rankmora.io/*",
+    "https://*.rankmora.io/*",
+    "http://localhost:3000/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "shield_rules",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://rankmora.io/*",
+        "https://*.rankmora.io/*",
+        "http://localhost:3000/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://*.canva.com/*",
+        "https://canva.com/*",
+        "https://*.chatgpt.com/*",
+        "https://chatgpt.com/*",
+        "https://*.openai.com/*",
+        "https://openai.com/*",
+        "https://*.claude.ai/*",
+        "https://claude.ai/*",
+        "https://*.anthropic.com/*",
+        "https://anthropic.com/*",
+        "https://*.grammarly.com/*",
+        "https://grammarly.com/*",
+        "https://*.grammarly.io/*",
+        "https://*.quillbot.com/*",
+        "https://quillbot.com/*",
+        "https://*.semrush.com/*",
+        "https://*.ahrefs.com/*",
+        "https://*.moz.com/*",
+        "https://*.majestic.com/*",
+        "https://*.spyfu.com/*",
+        "https://*.keywordseverywhere.com/*",
+        "https://*.kwfinder.com/*",
+        "https://*.mangools.com/*",
+        "https://*.wordai.com/*",
+        "https://*.wordhero.co/*",
+        "https://*.rytr.me/*",
+        "https://*.quetext.com/*",
+        "https://*.spinrewriter.com/*",
+        "https://*.spamzilla.io/*",
+        "https://*.woorank.com/*",
+        "https://*.writerzen.net/*",
+        "https://*.scribd.com/*",
+        "https://*.slideshare.net/*",
+        "https://*.picmonkey.com/*",
+        "https://*.placeit.net/*"
+      ],
+      "js": ["shield.js"],
+      "css": ["shield.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_title": "Rankmora Tool Launcher",
+    "default_popup": "popup.html"
+  }
+}

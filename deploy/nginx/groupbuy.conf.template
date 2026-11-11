@@ -1,0 +1,94 @@
+# Nginx site config for GroupBuy Tools
+# 1. Copy to /etc/nginx/sites-available/groupbuy
+# 2. Replace APP_DOMAIN, ADMIN_DOMAIN, SESSION_DOMAIN, TOOLS_BASE_DOMAIN
+# 3. sudo ln -s /etc/nginx/sites-available/groupbuy /etc/nginx/sites-enabled/
+# 4. sudo nginx -t && sudo systemctl reload nginx
+# 5. Wildcard TLS for tools:
+#    sudo certbot certonly --manual --preferred-challenges dns \
+#      -d TOOLS_BASE_DOMAIN -d "*.TOOLS_BASE_DOMAIN"
+#    Then point the tools server block at those certs, or use DNS-01 automation.
+
+# --- Next.js (marketing + user dashboard) ---
+server {
+    listen 80;
+    server_name APP_DOMAIN www.APP_DOMAIN;
+
+    client_max_body_size 10M;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+}
+
+# --- Admin portal (same Next.js app, separate subdomain) ---
+server {
+    listen 80;
+    server_name ADMIN_DOMAIN;
+
+    client_max_body_size 10M;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+}
+
+# --- Session service apex (optional shared /go host) ---
+server {
+    listen 80;
+    server_name SESSION_DOMAIN;
+
+    client_max_body_size 10M;
+    proxy_read_timeout 300s;
+    proxy_send_timeout 300s;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;
+    }
+}
+
+# --- Per-tool proxy hosts: semrush.tools.example.com ---
+# DNS: wildcard A/AAAA record for *.TOOLS_BASE_DOMAIN -> VPS IP
+server {
+    listen 80;
+    server_name *.TOOLS_BASE_DOMAIN TOOLS_BASE_DOMAIN;
+
+    client_max_body_size 10M;
+    proxy_read_timeout 300s;
+    proxy_send_timeout 300s;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;
+    }
+}

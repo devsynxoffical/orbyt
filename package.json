@@ -1,0 +1,56 @@
+{
+  "name": "group-buy-tools",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:clean": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\" && next dev",
+    "build": "prisma generate && node scripts/package-extension.mjs && node scripts/build-material-font.mjs && next build",
+    "extension:pack": "node scripts/package-extension.mjs",
+    "icons:font": "node scripts/build-material-font.mjs",
+    "start": "next start",
+    "lint": "next lint",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "postinstall": "prisma generate",
+    "session:install": "npm install --prefix apps/session-service && prisma generate",
+    "session:dev": "npm run dev --prefix apps/session-service",
+    "session:start": "npm run start --prefix apps/session-service",
+    "test": "tsx --test scripts/session-proxy.test.ts apps/session-service/src/url-allowlist.test.ts"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
+    "@prisma/client": "^5.22.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "next": "14.2.35",
+    "next-auth": "^4.24.14",
+    "nodemailer": "^7.0.13",
+    "prisma": "^5.22.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.80.0",
+    "stripe": "^17.7.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "archiver": "^7.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.22.4",
+    "typescript": "^5"
+  }
+}

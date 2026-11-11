@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "ToolLaunchMode" ADD VALUE IF NOT EXISTS 'CLOUD';

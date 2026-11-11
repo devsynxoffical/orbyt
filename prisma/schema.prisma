@@ -1,0 +1,361 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// Keep session-service's nested @prisma/client in sync when `prisma generate` runs at repo root.
+generator sessionServiceClient {
+  provider = "prisma-client-js"
+  output   = "../apps/session-service/node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String               @id @default(cuid())
+  name             String
+  email            String               @unique
+  passwordHash     String
+  role             Role                 @default(USER)
+  status           UserStatus           @default(ACTIVE)
+  /// Bumped on each login / password change / suspend → invalidates other JWTs
+  sessionVersion   Int                  @default(0)
+  failedLoginCount Int                  @default(0)
+  lockedAt         DateTime?
+  lastLoginAt      DateTime?
+  lastLoginIp      String?
+  createdAt        DateTime             @default(now())
+  subscriptions    Subscription[]
+  toolAccess       UserToolAccess[]
+  paymentOrders    PaymentOrder[]
+  toolRequests     ToolRequest[]
+  resetTokens      PasswordResetToken[]
+  supportThreads   SupportThread[]
+  loginEvents      LoginEvent[]
+}
+
+/// Audit log of sign-ins (success/fail) for admin + suspicious-activity emails
+model LoginEvent {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ip         String?
+  userAgent  String?
+  success    Boolean  @default(true)
+  suspicious Boolean  @default(false)
+  /// NEW_IP | NEW_DEVICE | LOCKED_OUT | FAILED_PASSWORD
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  /// Auto-locked after too many failed logins — admin must unblock
+  LOCKED
+}
+
+model PlatformSettings {
+  id                  String   @id @default("default")
+  whatsappNumber      String?
+  defaultAccessDays   Int      @default(30)
+  paymentInstructions String?
+  updatedAt           DateTime @updatedAt
+}
+
+model BankAccount {
+  id            String         @id @default(cuid())
+  bankName      String
+  accountTitle  String
+  accountNumber String
+  iban          String?
+  active        Boolean        @default(true)
+  sortOrder     Int            @default(0)
+  createdAt     DateTime       @default(now())
+  paymentOrders PaymentOrder[]
+}
+
+enum PaymentMethod {
+  MANUAL
+  STRIPE
+}
+
+enum PaymentOrderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model PaymentOrder {
+  id              String             @id @default(cuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolId          String
+  tool            Tool               @relation(fields: [toolId], references: [id])
+  amountPkr       Int
+  paymentMethod   PaymentMethod      @default(MANUAL)
+  bankAccountId   String?
+  bankAccount     BankAccount?       @relation(fields: [bankAccountId], references: [id])
+  stripeSessionId String?            @unique
+  screenshotUrl   String?
+  status          PaymentOrderStatus @default(PENDING)
+  userNote        String?
+  adminNote       String?
+  reviewedAt      DateTime?
+  reviewedById    String?
+  createdAt       DateTime           @default(now())
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+enum CookieHealthStatus {
+  UNKNOWN
+  ALIVE
+  EXPIRED
+}
+
+enum ToolLaunchMode {
+  /// Reverse-proxy cookie injection (blocked by Cloudflare on many sites)
+  PROXY
+  /// Browser extension sets cookies on the real tool domain
+  EXTENSION
+  /// Remote Chromium stream (works on mobile without extensions)
+  CLOUD
+  /// Open launch URL only (no auto-login)
+  DIRECT
+}
+
+model Tool {
+  id                 String           @id @default(cuid())
+  name               String
+  slug               String           @unique
+  description        String?
+  iconUrl            String?
+  pricePkr           Int              @default(0)
+  accessDurationDays Int              @default(30)
+  launchUrl          String?
+  /// Hostnames allowed for proxy upstream (derived from launchUrl when empty)
+  allowedHosts       String[]         @default([])
+  /// Optional override for tool subdomain (defaults to slug)
+  proxySubdomain     String?
+  /// How users launch this tool
+  launchMode         ToolLaunchMode   @default(PROXY)
+  active             Boolean          @default(true)
+  planTools          PlanTool[]
+  userAccess         UserToolAccess[]
+  paymentOrders      PaymentOrder[]
+  accounts           ToolAccount[]
+  launchLogs         ToolLaunchLog[]
+  proxySessions      ProxySession[]
+}
+
+model ToolAccount {
+  id                 String             @id @default(cuid())
+  toolId             String
+  tool               Tool               @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  label              String
+  cookieDataEnc      String
+  maxConcurrentUsers Int                @default(5)
+  active             Boolean            @default(true)
+  healthStatus       CookieHealthStatus @default(UNKNOWN)
+  lastHealthCheckAt  DateTime?
+  lastHealthError    String?
+  lastVerifiedAt     DateTime?
+  notes              String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  launchLogs         ToolLaunchLog[]
+  proxySessions      ProxySession[]
+
+  @@index([toolId, active])
+}
+
+model LaunchToken {
+  id            String    @id @default(cuid())
+  /// SHA-256 hash of the one-time launch token (plaintext never stored)
+  tokenHash     String    @unique
+  userId        String
+  toolId        String
+  toolAccountId String
+  expiresAt     DateTime
+  usedAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([tokenHash])
+  @@index([expiresAt])
+}
+
+model ProxySession {
+  id                String       @id
+  userId            String
+  toolId            String
+  tool              Tool         @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  toolAccountId     String
+  toolAccount       ToolAccount  @relation(fields: [toolAccountId], references: [id], onDelete: Cascade)
+  toolSlug          String
+  upstreamOrigin    String
+  expiresAt         DateTime
+  revokedAt         DateTime?
+  lastAccessCheckAt DateTime?
+  createdAt         DateTime     @default(now())
+
+  @@index([toolAccountId, revokedAt, expiresAt])
+  @@index([userId, toolId])
+  @@index([expiresAt])
+}
+
+model ToolLaunchLog {
+  id            String      @id @default(cuid())
+  userId        String
+  toolId        String
+  tool          Tool        @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  toolAccountId String
+  toolAccount   ToolAccount @relation(fields: [toolAccountId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@index([userId, createdAt])
+  @@index([toolId, createdAt])
+}
+
+model Plan {
+  id            String         @id @default(cuid())
+  name          String
+  description   String?
+  pricePkr      Int            @default(0)
+  durationDays  Int            @default(30)
+  active        Boolean        @default(true)
+  tools         PlanTool[]
+  subscriptions Subscription[]
+}
+
+model PlanTool {
+  planId String
+  toolId String
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  tool   Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@id([planId, toolId])
+}
+
+model Subscription {
+  id        String     @id @default(cuid())
+  userId    String
+  planId    String?
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      Plan?      @relation(fields: [planId], references: [id])
+  status    SubStatus  @default(PENDING)
+  startedAt DateTime?
+  expiresAt DateTime?
+  createdAt DateTime   @default(now())
+  notes     String?
+}
+
+enum SubStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELED
+}
+
+model UserToolAccess {
+  id        String       @id @default(cuid())
+  userId    String
+  toolId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool         @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  status    AccessStatus @default(ACTIVE)
+  grantedAt DateTime     @default(now())
+  expiresAt DateTime?
+  source    AccessSource @default(PLAN)
+
+  @@unique([userId, toolId])
+}
+
+enum AccessStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum AccessSource {
+  PLAN
+  MANUAL
+  PURCHASE
+}
+
+enum ToolRequestStatus {
+  PENDING
+  FULFILLED
+  DISMISSED
+}
+
+model ToolRequest {
+  id           String            @id @default(cuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolIds      String[]
+  note         String?
+  status       ToolRequestStatus @default(PENDING)
+  createdAt    DateTime          @default(now())
+  reviewedAt   DateTime?
+  reviewedById String?
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+enum SupportThreadStatus {
+  OPEN
+  CLOSED
+}
+
+model SupportThread {
+  id               String              @id @default(cuid())
+  userId           String
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject          String              @default("Support")
+  status           SupportThreadStatus @default(OPEN)
+  lastMessageAt    DateTime            @default(now())
+  adminUnreadCount Int                 @default(0)
+  userUnreadCount  Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  messages         SupportMessage[]
+
+  @@index([status, lastMessageAt])
+  @@index([userId])
+}
+
+model SupportMessage {
+  id         String        @id @default(cuid())
+  threadId   String
+  thread     SupportThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  senderRole Role
+  senderId   String
+  body       String
+  createdAt  DateTime      @default(now())
+
+  @@index([threadId, createdAt])
+}

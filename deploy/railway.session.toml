@@ -1,0 +1,16 @@
+# Railway service: session proxy (tool launch /go /proxy)
+# Create: New Service → GitHub repo → same repo as TOOLS
+# Settings → Root Directory: leave repo root
+# Settings → Custom Domain: session.rankmora.io
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm install && npm install --prefix apps/session-service && npx prisma generate"
+
+[deploy]
+startCommand = "npm run session:start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[env]
+NODE_ENV = "production"
